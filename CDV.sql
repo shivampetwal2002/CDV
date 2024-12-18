@@ -289,5 +289,3 @@ CREATE MATERIALIZED VIEW CDV AS
             Design_and_survey_mv3 mv3 ON mv2.customer_unique_id_2 = mv3.customer_unique_id_3
         JOIN
             permits_and_utility_mv4 mv4 ON mv3.customer_unique_id_3 = mv4.customer_unique_id_4;
-
-
