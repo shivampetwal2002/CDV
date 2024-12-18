@@ -1,6 +1,8 @@
 
 CREATE TABLE cdv_table AS
 SELECT
+
+
     -- From Customer_info_mv1
     c.unique_id AS unique_id_1,
     c.dealer,
