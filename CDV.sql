@@ -1,5 +1,6 @@
 
 
+
 CREATE MATERIALIZED VIEW Customer_info_mv1 AS
     SELECT
 
