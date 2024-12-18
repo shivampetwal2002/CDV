@@ -1,28 +1,27 @@
 
 
-
 CREATE MATERIALIZED VIEW Customer_info_mv1 AS
     SELECT
 
         c.unique_id AS unique_id_1,
 
     -- customers_customers_schema
-        c.dealer AS dealer,
-            c.project_status AS project_status,
+        c.dealer,
+            c.project_status,
             c.puma AS puma_cat,
-            c.credit_expiration_date_field AS credit_expiration_date,
-            c.account_executive AS account_executive,
-            c.state AS state,
-            c.address AS address,
-            c.finance_id AS finance_id,
-            c.primary_sales_rep AS primary_sales_rep,
-            c.secondary_sales_rep AS secondary_sales_rep,
+            c.credit_expiration_date_field,
+            c.account_executive ,
+            c.state,
+            c.address,
+            c.finance_id,
+            c.primary_sales_rep ,
+            c.secondary_sales_rep ,
             c.total_system_cost AS contract_total,
             c.email_address AS customer_email,
             c.phone_number AS customer_phone_number,
             c.jeopardy_date ,
             c.setter ,
-            c.adder_breakdown_and_total_new AS adder_breakdown_and_total,
+            c.adder_breakdown_total_new,
             c.office ,
             c.utility_company ,
             --c.created_on AS customer_created_on,
@@ -31,12 +30,12 @@ CREATE MATERIALIZED VIEW Customer_info_mv1 AS
             c.customer_name AS customer,
 
         --sales_partner_dbhub_schema
-            spds.item_id AS dealer_item_id,
+            spds.record_id AS dealer_item_id,
             spds.partner_id,
 
         --prospects_customers_schema
             pc.name AS prospect,
-            pc.created_on AS prospect_created_date,
+            pc.prospect_created_on AS prospect_created_date,
             pc.working_date AS prospect_working_date,
 
         --sales_rep_dbhub_schema
@@ -45,10 +44,10 @@ CREATE MATERIALIZED VIEW Customer_info_mv1 AS
 
         -- ntp_ntp_schema
             ntp.finance_type AS loan_type,
-            ntp.net_epc AS net_epc,
-            ntp.prospectid_dealerid_salesrepid,
-            ntp.owe_funded_adder_breakdown_and_total AS owe_funded_adder_breakdown_and_total,
-            ntp.ahj AS ahj,
+            ntp.net_epc ,
+            ntp.prospect_id_dealer_id_and_sales_rep_id,
+            ntp.owe_funded_adder_breakdown_total,
+            ntp.ahj ,
             ntp.total_cost_for_adders AS adders_total,
             ntp.pending_ntp_date AS working_date ,
             ntp.ntp_complete_date AS ntp_date,
@@ -60,13 +59,13 @@ CREATE MATERIALIZED VIEW Customer_info_mv1 AS
         FROM
             customers_customers_schema c
         LEFT JOIN
-            ntp_ntp_schema ntp ON c.unique_id = ntp.unique_id
+            ntp_ntp_schema ntp ON c.unique_id = ntp.customer_unique_id
         LEFT JOIN
-            sales_rep_dbhub_schema sr ON SPLIT_PART(ntp.prospectid_dealerid_salesrepid, ',', 3) = sr.item_id::text
+            sales_rep_dbhub_schema sr ON SPLIT_PART(ntp.prospect_id_dealer_id_and_sales_rep_id, ',', 3) = sr.record_id::text
         LEFT JOIN
-            sales_partner_dbhub_schema spds ON SPLIT_PART(ntp.prospectid_dealerid_salesrepid, ',', 2) = spds.item_id::text
+            sales_partner_dbhub_schema spds ON SPLIT_PART(ntp.prospect_id_dealer_id_and_sales_rep_id, ',', 2) = spds.record_id::text
         LEFT JOIN
-            prospects_customers_schema pc ON SPLIT_PART(ntp.prospectid_dealerid_salesrepid, ',', 1) = pc.item_id::text
+            prospects_customers_schema pc ON SPLIT_PART(ntp.prospect_id_dealer_id_and_sales_rep_id, ',', 1) = pc.item_id::text
 
         WHERE
             c.unique_id IS NOT NULL AND c.unique_id != '' ;
@@ -90,17 +89,17 @@ CREATE MATERIALIZED VIEW Sales_and_permitting_mv2 AS
         pv.pv_install_day_window AS pv_install_scheduled_date,
         pv.install_complete_1_2 AS pv_install_complete_1_2_date,
         pv.install_complete_2_3 AS pv_install_complete_2_3_date,
-        pv.created_on AS pv_install_created_date,
+        pv.pv_install_created_on ,
         pv.pv_completion_date AS pv_install_completed_date,
-        pv.assigned_foreman AS assigned_foreman,
+        pv.assigned_foreman ,
         --pv.work_scheduled_date AS roofing_scheduled_date,
-        pv.created_on AS roofing_created_date,
+        pv.pv_install_created_on AS roofing_created_date,
         --pv.work_completed_date AS roofing_completed_date,
 
     -- permit_fin_pv_permits_schema
         pf.pv_expected_approval_date AS permit_submittal_eta,
         pf.pv_redlined_date AS permit_redlined,
-        pf.created_on AS permit_created,
+        pf.record_created_on AS permit_created,
         pf.pv_submitted AS permit_submitted_date,
         pf.pv_expected_approval_date AS permit_expected_approval_date,
         pf.permit_specialist AS permitting_specialist,
@@ -188,7 +187,7 @@ CREATE MATERIALIZED VIEW permits_and_utility_mv4 AS
         fppfs.approved AS fire_permit_approved_date,
 
      -- battery_permits_permit_fin_schema
-        bppfs.created_on AS battery_permit_created_date,
+        bppfs.battery_permit_created_on,
         bppfs.submitted AS battery_permit_submitted_date,
         bppfs.approved AS battery_permit_approved_date,
 
@@ -197,15 +196,15 @@ CREATE MATERIALIZED VIEW permits_and_utility_mv4 AS
         bses.completion_date AS battery_complete_date,
 
      -- electrical_permits_permit_fin_schema
-        eppfs.created_on AS electrical_permit_created_date,
+        eppfs.electrical_permit_created_on  AS electrical_permit_created_date,
         eppfs.submitted_date AS electrical_permit_submitted_date,
         eppfs.approved AS electrical_permit_approved_date,
 
      -- ic_ic_pto_schema
-        iips.created_on AS ic_created_date,
+        iips.ic_created_on AS ic_created_date,
         iips.ic_submitted_date AS ic_submitted_date,
         iips.ic_estimated_approval_date AS ic_expected_approval_date,
-        --iips.Utility_Specialist  AS utility_specialist, --⚠️
+        --iips.Utility_Specialist  AS utility_specialist,
         iips.ic_resubmitted_date AS ic_re_submitted_date,
         iips.ic_approved_date AS ic_approved_date,
         iips.ic_rejection_date AS ic_rejection_date,
@@ -217,8 +216,8 @@ CREATE MATERIALIZED VIEW permits_and_utility_mv4 AS
         pis.podio_redlined_date AS pto_fail_date,
         pis.pto_granted AS pto_date,
 
-     --fin_permits_fin_schema fp;
-        fp.created_on AS fin_created_date,
+     --fin_permit_fin_schema fp;
+        fp.fin_created_on AS fin_created_date,
         fp.fin_scheduled_on  AS inspection_scheduled_date,
         fp.approved_date  AS inspection_completed_date,
         fp.approved_date AS fin_pass_date,
@@ -253,9 +252,9 @@ CREATE MATERIALIZED VIEW permits_and_utility_mv4 AS
         LEFT JOIN
             electrical_permits_permit_fin_schema eppfs ON fppfs.customer_unique_id = eppfs.customer_unique_id
         LEFT JOIN
-            pto_ic_schema pis ON iips.customer_unique_id = pis.customer_unique_id
+            pto_ic_pto_schema pis ON iips.customer_unique_id = pis.customer_unique_id
         LEFT JOIN
-            fin_permits_fin_schema fp ON pis.customer_unique_id = fp.customer_unique_id
+            fin_permit_fin_schema fp ON pis.customer_unique_id = fp.customer_unique_id
         LEFT JOIN
             trenching_service_electrical_schema tses ON fp.customer_unique_id = tses.customer_unique_id
         LEFT JOIN
