@@ -1,183 +1,183 @@
 
-CREATE TABLE cdv_table AS
+CREATE TABLE CDV AS
 SELECT
 
 -- customers_customers_schema
-    c.unique_id,
-    c.dealer,
-    c.project_status,
-    c.puma AS puma_cat,
-    c.credit_expiration_date_field,
-    c.account_executive,
-    c.state,
-    c.address,
-    c.finance_id,
-    c.primary_sales_rep,
-    c.secondary_sales_rep,
-    c.total_system_cost AS contract_total,
-    c.email_address AS customer_email,
-    c.phone_number AS customer_phone_number,
-    c.jeopardy_date,
-    c.setter,
-    c.adder_breakdown_total_new AS adder_breakdown_and_total,
-    c.office,
-    c.utility_company,
+    c.unique_id AS unique_id_cu,
+    c.dealer AS dealer_cu,
+    c.project_status AS project_status_cu,
+    c.puma AS puma_cu,
+    c.credit_expiration_date_field AS credit_expiration_date_cu,
+    c.account_executive AS account_executive_cu,
+    c.state AS state_cu,
+    c.address AS address_cu,
+    c.finance_id AS finance_id_cu,
+    c.primary_sales_rep AS primary_sales_rep_cu,
+    c.secondary_sales_rep AS secondary_sales_rep_cu,
+    c.total_system_cost AS contract_total_cu,
+    c.email_address AS customer_email_cu,
+    c.phone_number AS customer_phone_number_cu,
+    c.jeopardy_date AS jeopardy_date_cu,
+    c.setter AS setter_cu,
+    c.adder_breakdown_total_new AS adder_breakdown_total_cu,
+    c.office AS office_cu,
+    c.utility_company AS utility_company_cu,
     --c.created_on AS customer_created_on,
-    c.sale_date AS contract_date,
-    c.last_contact_w_ho AS customer_last_contacted,
-    c.customer_name AS customer,
+    c.sale_date AS sale_date_cu,
+    c.last_contact_w_ho AS last_contact_w_ho_cu,
+    c.customer_name AS customer_name_cu,
 
 --sales_partner_dbhub_schema
-    spds.record_id AS dealer_item_id,
-    spds.partner_id,
+    spds.record_id record_id_sales_par,
+    spds.partner_id AS partner_id_sales_par,
 
 --prospects_customers_schema
-    pc.name AS prospect,
-    pc.prospect_created_on AS prospect_created_date,
-    pc.working_date AS prospect_working_date,
+    pc.name AS name_prospects,
+    pc.prospect_created_on AS prospect_created_on_prospects,
+    pc.working_date AS working_date_prospects,
 
 --sales_rep_dbhub_schema
-    sr.team,
-    sr.team_region_untd,
+    sr.team AS team_salesrep,
+    sr.team_region_untd AS team_region_untd_salesrep,
 
 -- ntp_ntp_schema
-    ntp.finance_type AS loan_type,
-    ntp.net_epc AS net_epc,
-    ntp.prospect_id_dealer_id_and_sales_rep_id,
-    ntp.owe_funded_adder_breakdown_total,
-    ntp.ahj,
-    ntp.total_cost_for_adders AS adders_total,
-    ntp.pending_ntp_date AS working_date,
-    ntp.ntp_complete_date AS ntp_date,
-    ntp.finance AS partner,
+    ntp.finance_type AS finance_type_ntp,
+    ntp.net_epc AS net_epc_ntp,
+    ntp.prospect_id_dealer_id_and_sales_rep_id AS prospect_id_dealer_id_and_sales_rep_id_ntp,
+    ntp.owe_funded_adder_breakdown_total AS owe_funded_adder_breakdown_total_ntp,
+    ntp.ahj AS ahj_ntp,
+    ntp.total_cost_for_adders AS total_cost_for_adders_ntp,
+    ntp.pending_ntp_date AS pending_ntp_date_ntp,
+    ntp.ntp_complete_date AS ntp_complete_date_ntp,
+    ntp.finance AS finance_ntp,
     --ntp. AS finance_partner,
 
 
 
 
 -- sales_metrics_schema
-    sms.cancelled_date,
+    sms.cancelled_date AS cancelled_date_sales_me,
 
 -- pv_install_install_subcontracting_schema
-    pv.pv_install_day_window AS pv_install_scheduled_date,
-    pv.install_complete_1_2 AS pv_install_complete_1_2_date,
-    pv.install_complete_2_3 AS pv_install_complete_2_3_date,
-    pv.pv_install_created_on AS pv_install_created_date,
-    pv.pv_completion_date AS pv_install_completed_date,
-    pv.assigned_foreman,
-    --pv.work_scheduled_date AS roofing_scheduled_date,
-    pv.pv_install_created_on AS roofing_created_date,
-    --pv.work_completed_date AS roofing_completed_date,
+    pv.pv_install_day_window AS pv_install_scheduled_date_pv_ins,
+    pv.install_complete_1_2 AS install_complete_1_2_date_pv_ins,
+    pv.install_complete_2_3 AS install_complete_2_3_date_pv_ins,
+    pv.pv_install_created_on AS pv_install_created_date_pv_ins,
+    pv.pv_completion_date AS pv_install_completed_date_pv_ins,
+    pv.assigned_foreman AS assigned_foreman_pv_ins,
+    --pv.work_scheduled_date AS roofing_scheduled_date_pv_ins,
+    pv.pv_install_created_on AS roofing_created_date_pv_ins,
+    --pv.work_completed_date AS roofing_completed_date_pv_ins,
 
 -- permit_fin_pv_permits_schema
-    pf.pv_expected_approval_date AS permit_submittal_eta,
-    pf.pv_redlined_date AS permit_redlined,
-    pf.record_created_on AS permit_created,
-    pf.pv_submitted AS permit_submitted_date,
-    pf.pv_expected_approval_date AS permit_expected_approval_date,
-    pf.permit_specialist AS permitting_specialist,
-    pf.pv_resubmitted AS permit_re_submitted_date,
-    pf.pv_approved AS permit_approved_date,
-    pf.permit_turnaround_time,
+    pf.pv_expected_approval_date AS pv_expected_approval_date_permit_fin,
+    pf.pv_redlined_date AS pv_redlined_date_permit_fin,
+    pf.record_created_on AS record_created_on_permit_fin,
+    pf.pv_submitted AS pv_submitted_permit_fin,
+    pf.pv_expected_approval_date AS pv_expected_approval_date_permit_fin,
+    pf.permit_specialist AS permit_specialist_permit_fin,
+    pf.pv_resubmitted AS pv_resubmitted_permit_fin,
+    pf.pv_approved AS pv_approved_permit_fin,
+    pf.permit_turnaround_time AS permit_turnaround_time_permit_fin,
 
 
 
 
 -- survey_survey_schema
-    sss.second_completion_date AS survey_2nd_completion_date,
-    sss.original_survey_scheduled_date AS site_survey_scheduled_date,
-    --sss. AS site_survey_rescheduled_date,
-    sss.survey_completion_date AS site_survey_completed_date,
+    sss.second_completion_date AS second_completion_date_survey,
+    sss.original_survey_scheduled_date AS original_survey_scheduled_date_survey,
+    --sss. AS site_survey_rescheduled_date_survey,
+    sss.survey_completion_date AS survey_completion_date_survey,
 
 --planset_cad_schema pcs
-    pcs.rejected_date AS cad_rejection_date,
-    pcs.rejected_date AS peee_rejection_date,
-    pcs.cad_designer_name AS cad_designer,
-    pcs.cad_pending_date_h AS cad_ready,
-    pcs.cad_complete_date,
-    pcs.qa_fixes_pending_date_h AS cad_revision_requested_date,
-    pcs.cad_pending_date_h AS abcad_ready,
-    pcs.cad_complete_date AS abcad_completed,
-    pcs.cad_designer_name AS cad_reviewer,
+    pcs.rejected_date AS cad_rejection_date_planset_cad,
+    pcs.rejected_date AS peee_rejection_date_planset_cad,
+    pcs.cad_designer_name AS cad_designer_planset_cad,
+    pcs.cad_pending_date_h AS cad_ready_planset_cad,
+    pcs.cad_complete_date AS cad_complete_date_planset_cad,
+    pcs.qa_fixes_pending_date_h AS cad_revision_requested_date_planset_cad,
+    pcs.cad_pending_date_h AS abcad_ready_planset_cad,
+    pcs.cad_complete_date AS abcad_completed_planset_cad,
+    pcs.cad_designer_name AS cad_reviewer_planset_cad,
 
 --pe_ee_stamps_cad_schema
-    peee.submitted_date,
-    peee.completion_date,
-    peee.redlined_date,
-    peee.stamp_provider,
+    peee.submitted_date AS submitted_date_peee,
+    peee.completion_date AS completion_date_peee,
+    peee.redlined_date AS redlined_date_peee,
+    peee.stamp_provider AS stamp_provider_peee,
 
 --system_customers_schema
-    scs.contracted_system_size_parent AS system_size,
-    scs.inverter AS inverter_part_number,
-    --scs.module_type AS module,
-    --scs.inverter_type AS solar_inverter_installed
-    --scs.module_qty AS solar_modules_installed
-    --scs.contracted_system_size  AS pv_array_size_kw
+    scs.contracted_system_size_parent AS contracted_system_size_parent_sytem,
+    scs.inverter AS inverter_system,
+    --scs.module_type AS module_system,
+    --scs.inverter_type AS solar_inverter_installed_system
+    --scs.module_qty AS solar_modules_installed_system
+    --scs.contracted_system_size  AS pv_array_size_kw_system
 
 
 
 
 -- fire_permits_permit_fin_schema
-    fppfs.created_on AS fire_permit_created_date,
-    fppfs.submitted AS fire_permit_submitted_date,
-    fppfs.approved AS fire_permit_approved_date,
+    fppfs.created_on AS created_date_fire_permit,
+    fppfs.submitted AS submitted_date_fire_permit,
+    fppfs.approved AS approved_date_fire_permit,
 
 -- battery_permits_permit_fin_schema
-    bppfs.battery_permit_created_on,
-    bppfs.submitted AS battery_permit_submitted_date,
-    bppfs.approved AS battery_permit_approved_date,
+    bppfs.battery_permit_created_on AS created_on_battery_permit,
+    bppfs.submitted AS submitted_date_battery_permit,
+    bppfs.approved AS approved_date_battery_permit,
 
 --batteries_service_electrical_schema
-    bses.battery_installation_date AS battery_scheduled_date,
-    bses.completion_date AS battery_complete_date,
+    bses.battery_installation_date AS scheduled_date_bat_ser,
+    bses.completion_date AS complete_date_bat_ser,
 
 -- electrical_permits_permit_fin_schema
-    eppfs.electrical_permit_created_on AS electrical_permit_created_date,
-    eppfs.submitted_date AS electrical_permit_submitted_date,
-    eppfs.approved AS electrical_permit_approved_date,
+    eppfs.electrical_permit_created_on AS electrical_permit_created_on_elec_per,
+    eppfs.submitted_date AS electrical_permit_submitted_date_elec_per,
+    eppfs.approved AS electrical_permit_approved_date_elec_per,
 
 -- ic_ic_pto_schema
-    iips.ic_created_on AS ic_created_date,
-    iips.ic_submitted_date AS ic_submitted_date,
-    iips.ic_estimated_approval_date AS ic_expected_approval_date,
-    --iips.Utility_Specialist  AS utility_specialist,
-    iips.ic_resubmitted_date AS ic_re_submitted_date,
-    iips.ic_approved_date AS ic_approved_date,
-    iips.ic_rejection_date AS ic_rejection_date,
+    iips.ic_created_on AS created_date_ic_ic,
+    iips.ic_submitted_date AS submitted_date_ic_ic,
+    iips.ic_estimated_approval_date AS expected_approval_date_ic_ic,
+    --iips.Utility_Specialist  AS utility_specialist_ic_ic,
+    iips.ic_resubmitted_date AS re_submitted_date_ic_ic,
+    iips.ic_approved_date AS approved_date_ic_ic,
+    iips.ic_rejection_date AS rejection_date_ic_ic,
 
 --pto_ic_schema
-    pis.pto_created_on,
-    pis.submitted AS pto_submitted_date,
-    pis.pto_specialist,
-    pis.podio_redlined_date AS pto_fail_date,
-    pis.pto_granted AS pto_date,
+    pis.pto_created_on AS created_on_pto,
+    pis.submitted AS submitted_date_pto,
+    pis.pto_specialist AS pto_specialist,
+    pis.podio_redlined_date AS fail_date_pto,
+    pis.pto_granted AS date_pto,
 
  --fin_permit_fin_schema fp;
-    fp.fin_created_on AS fin_created_date,
-    fp.fin_scheduled_on AS inspection_scheduled_date,
-    fp.approved_date AS inspection_completed_date,
-    fp.approved_date AS fin_pass_date,
-    fp.approved_date AS final_inspection_passed_date,
+    fp.fin_created_on AS created_date_fin_per,
+    fp.fin_scheduled_on AS inspection_scheduled_date_fin_per,
+    fp.approved_date AS approved_date_fin_per,
+    fp.approved_date AS fin_pass_date_fin_per,
+    fp.approved_date AS final_inspection_passed_date_fin_per,
     --fp. AS fin_scheduled_date,
 
 
 -- trenching_service_electrical_schema
-    tses.completion_date AS trenching_completed,
-    tses.trenching_created_on AS trenching_ws_open,
-    tses.work_scheduled_date AS trenching_scheduled,
+    tses.completion_date AS completion_date_trench_ser,
+    tses.trenching_created_on AS trenching_created_trench_ser,
+    tses.work_scheduled_date AS scheduled_trench_ser,
 
 --roofing_request_install_subcontracting_schema
-    rriss.app_status,
+    rriss.app_status AS app_status_roof_req,
 
 -- mpu_service_electrical_schema
-    mses.mpu_created_on AS mpu_created_date,
-    mses.pk_or_cutover_date AS mpu_scheduled_date,
-    mses.pk_or_cutover_date_of_completion AS mpu_complete_date,
+    mses.mpu_created_on AS created_date_mpu_ser,
+    mses.pk_or_cutover_date AS scheduled_date_mpu_ser,
+    mses.pk_or_cutover_date_of_completion AS complete_date_mpu_ser,
 
 -- derates_service_electrical_schema
-    dses.derate_created_on AS derate_created_date,
-    dses.scheduled_date AS derate_scheduled_date,
-    dses.completion_date AS derate_completed_date
+    dses.derate_created_on AS created_date_derate,
+    dses.scheduled_date AS scheduled_date_derate,
+    dses.completion_date AS completed_date_derate
 
 
 
