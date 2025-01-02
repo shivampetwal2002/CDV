@@ -2,7 +2,6 @@
 CREATE VIEW ops_analysis_timelines_view AS
 
 
-
 SELECT
   ops_data.unique_id,
   Abs(
@@ -818,8 +817,8 @@ FROM
     service_requests_service_electrical_schema.pto_date as service_created_date, -- **reassign -> (service_request_created_on ) _it is giving error , text+all empty
     pv_install_install_subcontracting_schema.pv_scheduling_ready_date as install_ready_date,
 
-    --customers_customers_schema.ss_appointment_date as total_hold_days, --------------have to reassign ,--------------------------- CHECK,
-    planset_cad_schema.hold_duration_days as total_hold_days,
+    --customers_customers_schema.?????? as total_hold_days, --------------have to reassign ,--------------------------- CHECK,
+    planset_cad_schema.hold_duration_days as total_hold_days, --------- temp using this field , have to remove it
     planset_cad_schema.dat_complete_date as electrical_review_completion_date,
     planset_cad_schema.record_created_on as cad_requested_date,
     service_requests_service_electrical_schema.completion_date as service_completion_date , --
@@ -868,4 +867,4 @@ JOIN mpu_service_electrical_schema mses on fpfs.customer_unique_id   = mses.cust
 JOIN derates_service_electrical_schema dses on mses.customer_unique_id   = dses.customer_unique_id
 JOIN batteries_service_electrical_schema bses on dses.customer_unique_id  = bses.customer_unique_id
 JOIN rtr_two_install_subcontracting_schema rtiss  on bses.customer_unique_id  = rtiss.customer_unique_id
-JOIN service_requests_service_electrical_schema srses on rtiss.customer_unique_id = srses.customer_unique_id ;
+JOIN service_requests_service_electrical_schema srses on rtiss.customer_unique_id = srses.customer_unique_id
