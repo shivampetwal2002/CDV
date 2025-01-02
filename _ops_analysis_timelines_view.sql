@@ -778,7 +778,7 @@ FROM
   (
     SELECT
       customers_customers_schema.unique_id,
-      service_requests_service_electrical_schema.record_created_on as created_on,
+      service_requests_service_electrical_schema.record_created_on as created_on, -------------reassign , tempp using this field
       customers_customers_schema.ss_appointment_date AS site_survey_scheduled_date,
       customers_customers_schema.ss_completed_date AS site_survey_completed_date,
       planset_cad_schema.cad_complete_date,
