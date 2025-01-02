@@ -1,5 +1,8 @@
 
 CREATE VIEW ops_analysis_timelines_view AS
+
+
+
 SELECT
   ops_data.unique_id,
   Abs(
@@ -17,7 +20,7 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          salmetschema.cancelled_date - ops_data.site_survey_completed_date -- can find cancelled date
+          ops_data.cancelled_date - ops_data.site_survey_completed_date -- cant find cancelled date
       ) / 86400.0,
       2
     )
@@ -137,7 +140,7 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          salmetschema.cancelled_date - ops_data.created_on ----NOT FOUND in other schema
+          ops_data.cancelled_date - ops_data.created_on ----NOT FOUND in other schema
       ) / 86400.0,
       2
     )
@@ -187,7 +190,7 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          salmetschema.cancelled_date - ops_data.ntp_date --NOT FOUND in other schema
+          ops_data.cancelled_date - ops_data.ntp_date --NOT FOUND in other schema
       ) / 86400.0,
       2
     )
@@ -227,7 +230,7 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          salmetschema.cancelled_date - ops_data.pv_install_completed_date --NOT FOUND in other schema
+          ops_data.cancelled_date - ops_data.pv_install_completed_date --NOT FOUND in other schema
       ) / 86400.0,
       2
     )
@@ -287,7 +290,7 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          ops_data.pto_date - fieldopsschema.rtr_approved_date --NOT FOUND
+          ops_data.pto_date - ops_data.rtr_approved_date --NOT FOUND
       ) / 86400.0,
       2
     )
@@ -297,7 +300,7 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          fieldopsschema.fin_fail_date - fieldopsschema.rtr_approved_date --NOT FOUND
+          ops_data.fin_fail_date - ops_data.rtr_approved_date --NOT FOUND
       ) / 86400.0,
       2
     )
@@ -306,7 +309,7 @@ SELECT
     Round(
       EXTRACT(
         epoch        FROM
-          ops_data.pto_fail_date - fieldopsschema.rtr_approved_date  --NOT FOUND
+          ops_data.pto_fail_date - ops_data.rtr_approved_date  --NOT FOUND
       ) / 86400.0,
       2
     )
@@ -316,7 +319,7 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          fieldopsschema.rtr_approved_date - fieldopsschema.rtr_request_date_and_time --NOT FOUND
+          ops_data.rtr_approved_date - ops_data.rtr_request_date_and_time --NOT FOUND
       ) / 86400.0,
       2
     )
@@ -326,7 +329,7 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          fieldopsschema.service_completion_date - fieldopsschema.service_created_date -- AS per data this field is not required
+          ops_data.service_completion_date - ops_data.service_created_date -- AS per data this field is not required , NOT FOUND ,
       ) / 86400.0,
       2
     )
@@ -546,7 +549,7 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          fieldopsschema.install_ready_date - ops_data.created_on  -- NOT FOUND
+          ops_data.install_ready_date - ops_data.created_on  -- NOT FOUND
       ) / 86400.0,
       2
     )
@@ -555,10 +558,10 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          fieldopsschema.install_ready_date - ops_data.created_on  -- NOT FOUND
+          ops_data.install_ready_date - ops_data.created_on  -- NOT FOUND
       ) / 86400.0 - Coalesce(
         Nullif(
-          projectmgmt.total_hold_days, '' :: text   -- NOT FOUND
+          ops_data.total_hold_days, '' :: text   ----------------------------ERRORRRRRRRRRRRRRR
         ) :: numeric,
         0 :: numeric
       ),
@@ -591,7 +594,7 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          fieldopsschema.install_ready_date - ops_data.created_on  -- NOT FOUND
+          ops_data.install_ready_date - ops_data.created_on  -- NOT FOUND
       ) / 86400.0,
       2
     )
@@ -600,10 +603,10 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          fieldopsschema.install_ready_date - ops_data.created_on -- NOT FOUND
+          ops_data.install_ready_date - ops_data.created_on -- NOT FOUND
       ) / 86400.0 - Coalesce(
         Nullif(
-          projectmgmt.total_hold_days, '' :: text -- NOT FOUND
+          ops_data.total_hold_days, '' :: text -- NOT FOUND
         ) :: numeric,
         0 :: numeric
       ),
@@ -636,10 +639,10 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          fieldopsschema.install_ready_date - ops_data.created_on  -- NOT FOUND
+          ops_data.install_ready_date - ops_data.created_on  -- NOT FOUND
       ) / 86400.0 - Coalesce(
         Nullif(
-          projectmgmt.total_hold_days, '' :: text   -- NOT FOUND
+          ops_data.total_hold_days, '' :: text   -- NOT FOUND
         ) :: numeric,
         0 :: numeric
       ),
@@ -662,7 +665,7 @@ SELECT
       EXTRACT(
         epoch
         FROM
-          fieldopsschema.rtr_approved_date - ops_data.pv_install_scheduled_date  -- NOT FOUND
+          ops_data.rtr_approved_date - ops_data.pv_install_scheduled_date  -- NOT FOUND
       ) / 86400.0,
       2
     )
@@ -677,16 +680,16 @@ SELECT
       2
     )
   ) AS cad_timelines,
-  projectmgmt.total_hold_days,  -- NOT FOUND
+  ops_data.total_hold_days,  -- NOT FOUND
   Abs(
     Round(
       EXTRACT(
         epoch
         FROM
-          fieldopsschema.install_ready_date - ops_data.created_on  -- NOT FOUND
+          ops_data.install_ready_date - ops_data.created_on  -- NOT FOUND
       ) / 86400.0 - Coalesce(
         Nullif(
-          projectmgmt.total_hold_days, '' :: text  -- NOT FOUND
+          ops_data.total_hold_days, '' :: text  -- NOT FOUND
         ) :: numeric,
         0 :: numeric
       ),
@@ -776,6 +779,7 @@ FROM
   (
     SELECT
       customers_customers_schema.unique_id,
+      service_requests_service_electrical_schema.record_created_on as created_on,
       customers_customers_schema.ss_appointment_date AS site_survey_scheduled_date,
       customers_customers_schema.ss_completed_date AS site_survey_completed_date,
       planset_cad_schema.cad_complete_date,
@@ -792,7 +796,6 @@ FROM
       --internal_ops_metrics_schema.cad_review_date, -- AS per data this field is not required
       permit_fin_pv_permits_schema.created_on AS permit_created, -- AS per data this field is not required
       --internal_ops_metrics_schema.electrical_review_completion_date,-- NOT FOUND
-      customers_customers_schema.item_created_on as created_on,
 
     ----
     ntp_ntp_schema.ntp_complete_date AS ntp_date,
@@ -805,7 +808,25 @@ FROM
     mpu_service_electrical_schema.pk_or_cutover_date_of_completion as mpu_scheduled_date,
     derates_service_electrical_schema.completion_date as derate_completed_date,
     batteries_service_electrical_schema.battery_installation_date as  battery_scheduled_date,
-    batteries_service_electrical_schema.completion_date as battery_complete_date
+    batteries_service_electrical_schema.completion_date as battery_complete_date,
+
+    --new mapped fields which were not found
+    customers_customers_schema.cancel_date as cancelled_date,
+    rtr_two_install_subcontracting_schema.install_rtr_pass as rtr_approved_date,
+    rtr_two_install_subcontracting_schema.install_rtr_pending_date as rtr_request_date_and_time,
+    permit_fin_pv_permits_schema.pv_redlined_date as fin_fail_date,
+    service_requests_service_electrical_schema.pto_date as service_created_date, -- **reassign -> (service_request_created_on ) _it is giving error , text+all empty
+    pv_install_install_subcontracting_schema.pv_scheduling_ready_date as install_ready_date,
+
+    --customers_customers_schema.ss_appointment_date as total_hold_days, --------------have to reassign ,--------------------------- CHECK,
+    planset_cad_schema.hold_duration_days as total_hold_days,
+    planset_cad_schema.dat_complete_date as electrical_review_completion_date,
+    planset_cad_schema.record_created_on as cad_requested_date,
+    service_requests_service_electrical_schema.completion_date as service_completion_date , --
+    planset_cad_schema.cadr1_pass_date as cad_review_date
+
+
+
 
     FROM
       --internal_ops_metrics_schema,
@@ -822,25 +843,29 @@ FROM
       fin_permits_fin_schema,
       mpu_service_electrical_schema,
       derates_service_electrical_schema,
-      batteries_service_electrical_schema
+      batteries_service_electrical_schema,
+      rtr_two_install_subcontracting_schema,
+      service_requests_service_electrical_schema
 
     WHERE
       customers_customers_schema.unique_id IS NOT NULL
       AND customers_customers_schema.unique_id :: text <> '' :: text
+    AND service_requests_service_electrical_schema.service_request_created_on IS NOT NULL
+    AND service_requests_service_electrical_schema.service_request_created_on != ''
+
   ) ops_data
 
-JOIN pto_ic_schema pis on ops_data.unique_id :: text = pis.customer_unique_id :: text
-JOIN customers_customers_schema c on pis.customer_unique_id :: text = c.unique_id :: text
-JOIN pe_ee_stamps_cad_schema peee on c.unique_id :: text = peee.customer_unique_id :: text
-JOIN planset_cad_schema pcs on peee.customer_unique_id :: text = pcs.our_number :: text
-JOIN ic_ic_pto_schema iicps on pcs.our_number  :: text = iicps.customer_unique_id :: text
-JOIN electrical_permits_permit_fin_schema eppfs on iicps.customer_unique_id :: text = eppfs.customer_unique_id :: text
-JOIN permit_fin_pv_permits_schema pfpps on eppfs.customer_unique_id :: text  = pfpps.customer_unique_id :: text
-JOIN ntp_ntp_schema ntp on pfpps.customer_unique_id :: text = ntp.unique_id:: text
-JOIN fin_permits_fin_schema fpfs on ntp.unique_id:: text :: text = fpfs.customer_unique_id :: text
-JOIN mpu_service_electrical_schema mses on fpfs.customer_unique_id :: text = mses.customer_unique_id :: text
-JOIN derates_service_electrical_schema dses on mses.customer_unique_id :: text = dses.customer_unique_id :: text
-JOIN batteries_service_electrical_schema bses on dses.customer_unique_id :: text = bses.customer_unique_id :: text
-
-
-
+JOIN pto_ic_schema pis on ops_data.unique_id  = pis.customer_unique_id
+JOIN customers_customers_schema c on pis.customer_unique_id  = c.unique_id
+JOIN pe_ee_stamps_cad_schema peee on c.unique_id  = peee.customer_unique_id
+JOIN planset_cad_schema pcs on peee.customer_unique_id  = pcs.our_number
+JOIN ic_ic_pto_schema iicps on pcs.our_number   = iicps.customer_unique_id
+JOIN electrical_permits_permit_fin_schema eppfs on iicps.customer_unique_id  = eppfs.customer_unique_id
+JOIN permit_fin_pv_permits_schema pfpps on eppfs.customer_unique_id   = pfpps.customer_unique_id
+JOIN ntp_ntp_schema ntp on pfpps.customer_unique_id   = ntp.unique_id
+JOIN fin_permits_fin_schema fpfs on ntp.unique_id  = fpfs.customer_unique_id
+JOIN mpu_service_electrical_schema mses on fpfs.customer_unique_id   = mses.customer_unique_id
+JOIN derates_service_electrical_schema dses on mses.customer_unique_id   = dses.customer_unique_id
+JOIN batteries_service_electrical_schema bses on dses.customer_unique_id  = bses.customer_unique_id
+JOIN rtr_two_install_subcontracting_schema rtiss  on bses.customer_unique_id  = rtiss.customer_unique_id
+JOIN service_requests_service_electrical_schema srses on rtiss.customer_unique_id = srses.customer_unique_id ;
