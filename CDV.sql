@@ -6,7 +6,7 @@ CREATE MATERIALIZED VIEW Customer_info_mv1 AS
 
         c.unique_id AS unique_id_1,
 
-    -- customers_customers_schema
+-- customers_customers_schema
         c.dealer,
             c.project_status,
             c.puma AS puma_cat,
