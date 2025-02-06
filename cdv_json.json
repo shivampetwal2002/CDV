@@ -1,0 +1,391 @@
+{
+  "base_table": {
+    "app_id": "customers_customers_schema",
+    "select_columns": [
+      { "column_name": "unique_id", "alias": "unique_id_cu" },
+      { "column_name": "dealer", "alias": "dealer_cu" },
+      { "column_name": "project_status", "alias": "project_status_cu" },
+      { "column_name": "puma", "alias": "puma_cu" },
+      { "column_name": "credit_expiration_date_field", "alias": "credit_expiration_date_cu" },
+      { "column_name": "account_executive", "alias": "account_executive_cu" },
+      { "column_name": "state", "alias": "state_cu" },
+      { "column_name": "address", "alias": "address_cu" },
+      { "column_name": "finance_id", "alias": "finance_id_cu" },
+      { "column_name": "primary_sales_rep", "alias": "primary_sales_rep_cu" },
+      { "column_name": "secondary_sales_rep", "alias": "secondary_sales_rep_cu" },
+      { "column_name": "total_system_cost", "alias": "contract_total_cu" },
+      { "column_name": "email_address", "alias": "customer_email_cu" },
+      { "column_name": "phone_number", "alias": "customer_phone_number_cu" },
+      { "column_name": "jeopardy_date", "alias": "jeopardy_date_cu" },
+      { "column_name": "setter", "alias": "setter_cu" },
+      { "column_name": "adder_breakdown_and_total_new", "alias": "adder_breakdown_total_cu" },
+      { "column_name": "office", "alias": "office_cu" },
+      { "column_name": "utility_company", "alias": "utility_company_cu" },
+      { "column_name": "sale_date", "alias": "sale_date_cu" },
+      { "column_name": "last_contact_w_ho", "alias": "last_contact_w_ho_cu" },
+      { "column_name": "customer_name", "alias": "customer_name_cu" }
+    ],
+    "where_conditions": [
+      { "column": "unique_id", "operator": "IS NOT NULL" },
+      { "column": "unique_id", "operator": "!=", "value": "''" }
+    ]
+  },
+  "joins": [
+    {
+      "app_id": "ntp_ntp_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "column": "unique_id",
+        "references_column": "unique_id"
+      },
+      "select_columns": [
+        { "column_name": "finance_type", "alias": "finance_type_ntp" },
+        { "column_name": "net_epc", "alias": "net_epc_ntp" },
+        { "column_name": "prospectid_dealerid_salesrepid", "alias": "prospect_id_dealer_id_and_sales_rep_id_ntp" },
+        { "column_name": "owe_funded_adder_breakdown_and_total", "alias": "owe_funded_adder_breakdown_total_ntp" },
+        { "column_name": "ahj", "alias": "ahj_ntp" },
+        { "column_name": "total_cost_for_adders", "alias": "total_cost_for_adders_ntp" },
+        { "column_name": "pending_ntp_date", "alias": "pending_ntp_date_ntp" },
+        { "column_name": "ntp_complete_date", "alias": "ntp_complete_date_ntp" },
+        { "column_name": "finance", "alias": "finance_ntp" }
+      ]
+    },
+    {
+      "app_id": "sales_rep_dbhub_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "split_part",
+        "source_table_app_id": "ntp_ntp_schema",
+        "source_column": "prospectid_dealerid_salesrepid",
+        "part_number": 3,
+        "references_column": "record_id",
+        "cast": "text"
+      },
+      "select_columns": [
+        { "column_name": "team", "alias": "team_salesrep" },
+        { "column_name": "team_region_untd", "alias": "team_region_untd_salesrep" }
+      ]
+    },
+    {
+      "app_id": "sales_partner_dbhub_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "split_part",
+        "source_table_app_id": "ntp_ntp_schema",
+        "source_column": "prospectid_dealerid_salesrepid",
+        "part_number": 2,
+        "references_column": "record_id",
+        "cast": "text"
+      },
+      "select_columns": [
+        { "column_name": "record_id", "alias": "record_id_sales_par" },
+        { "column_name": "partner_id", "alias": "partner_id_sales_par" }
+      ]
+    },
+    {
+      "app_id": "prospects_customers_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "split_part",
+        "source_table_app_id": "ntp_ntp_schema",
+        "source_column": "prospectid_dealerid_salesrepid",
+        "part_number": 1,
+        "references_column": "record_id",
+        "cast": "text"
+      },
+      "select_columns": [
+        { "column_name": "name", "alias": "name_prospects" },
+        { "column_name": "prospect_created_on", "alias": "prospect_created_on_prospects" },
+        { "column_name": "working_date", "alias": "working_date_prospects" }
+      ]
+    },
+    {
+      "app_id": "sales_metrics_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "column": "unique_id",
+        "references_column": "unique_id"
+      },
+      "select_columns": [
+        { "column_name": "cancelled_date", "alias": "cancelled_date_sales_me" }
+      ]
+    },
+    {
+      "app_id": "pv_install_install_subcontracting_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "sales_metrics_schema",
+        "column": "unique_id",
+        "references_column": "customer_unique_id"
+      },
+      "select_columns": [
+        { "column_name": "pv_install_day_window", "alias": "pv_install_scheduled_date_pv_ins" },
+        { "column_name": "install_complete_1_2", "alias": "install_complete_1_2_date_pv_ins" },
+        { "column_name": "install_complete_2_3", "alias": "install_complete_2_3_date_pv_ins" },
+        { "column_name": "pv_install_created_on", "alias": "pv_install_created_date_pv_ins" },
+        { "column_name": "pv_completion_date", "alias": "pv_install_completed_date_pv_ins" },
+        { "column_name": "assigned_foreman", "alias": "assigned_foreman_pv_ins" },
+        { "column_name": "pv_install_created_on", "alias": "roofing_created_date_pv_ins" }
+      ]
+    },
+    {
+      "app_id": "permit_fin_pv_permits_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "pv_install_install_subcontracting_schema",
+        "column": "customer_unique_id",
+        "references_column": "customer_unique_id"
+      },
+      "select_columns": [
+        { "column_name": "pv_expected_approval_date", "alias": "permit_submittal_eta_permit_fin" },
+        { "column_name": "pv_redlined_date", "alias": "pv_redlined_date_permit_fin" },
+        { "column_name": "created_on", "alias": "created_on_permit_fin" },
+        { "column_name": "pv_submitted", "alias": "pv_submitted_permit_fin" },
+        { "column_name": "pv_expected_approval_date", "alias": "permit_expected_approval_date_permit_fin" },
+        { "column_name": "permit_specialist", "alias": "permit_specialist_permit_fin" },
+        { "column_name": "pv_resubmitted", "alias": "pv_resubmitted_permit_fin" },
+        { "column_name": "pv_approved", "alias": "pv_approved_permit_fin" },
+        { "column_name": "permit_turnaround_time", "alias": "permit_turnaround_time_permit_fin" }
+      ]
+    },
+    {
+      "app_id": "survey_survey_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "column": "unique_id",
+        "references_column": "customer_unique_id"
+      },
+      "select_columns": [
+        { "column_name": "twond_completion_date", "alias": "second_completion_date_survey" },
+        { "column_name": "original_survey_scheduled_date", "alias": "original_survey_scheduled_date_survey" },
+        { "column_name": "survey_completion_date", "alias": "survey_completion_date_survey" }
+      ]
+    },
+    {
+      "app_id": "planset_cad_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "survey_survey_schema",
+        "column": "customer_unique_id",
+        "references_column": "our_number"
+      },
+      "select_columns": [
+        { "column_name": "pe_ee_rejected_date", "alias": "cad_rejection_date_planset_cad" },
+        { "column_name": "pe_ee_rejected_date", "alias": "pe_ee_rejected_date_planset_cad" },
+        { "column_name": "cad_designer_name", "alias": "cad_designer_planset_cad" },
+        { "column_name": "cad_pending_date_h", "alias": "cad_ready_planset_cad" },
+        { "column_name": "cad_complete_date", "alias": "cad_complete_date_planset_cad" },
+        { "column_name": "qa_fixes_pending_date_h", "alias": "cad_revision_requested_date_planset_cad" },
+        { "column_name": "cad_pending_date_h", "alias": "abcad_ready_planset_cad" },
+        { "column_name": "cad_complete_date", "alias": "abcad_completed_planset_cad" },
+        { "column_name": "cad_designer_name", "alias": "cad_reviewer_planset_cad" }
+      ]
+    },
+    {
+      "app_id": "pe_ee_stamps_cad_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "planset_cad_schema",
+        "column": "our_number",
+        "references_column": "customer_unique_id"
+      },
+      "select_columns": [
+        { "column_name": "submitted_date", "alias": "submitted_date_peee" },
+        { "column_name": "completion_date", "alias": "completion_date_peee" },
+        { "column_name": "redlined_date", "alias": "redlined_date_peee" },
+        { "column_name": "stamp_provider", "alias": "stamp_provider_peee" }
+
+      ]
+    },
+    {
+      "app_id": "system_customers_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "pe_ee_stamps_cad_schema",
+        "column": "customer_unique_id",
+        "references_column": "customer_id"
+      },
+      "select_columns": [
+        { "column_name": "contracted_system_size_parent", "alias": "contracted_system_size_parent_sytem" },
+        { "column_name": "inverter", "alias": "inverter_system" }
+      ]
+    },
+    {
+      "app_id": "ic_ic_pto_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "column": "unique_id",
+        "references_column": "unique_id"
+      },
+      "select_columns": [
+        { "column_name": "created_on", "alias": "created_date_ic_ic" },
+        { "column_name": "ic_submitted_date", "alias": "submitted_date_ic_ic" },
+        { "column_name": "ic_estimated_approval_date", "alias": "expected_approval_date_ic_ic" },
+        { "column_name": "ic_resubmitted_date", "alias": "re_submitted_date_ic_ic" },
+        { "column_name": "ic_approved_date", "alias": "approved_date_ic_ic" },
+        { "column_name": "ic_rejection_date", "alias": "rejection_date_ic_ic" }
+      ]
+    },
+
+    {
+      "app_id": "fire_permits_permit_fin_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "ic_ic_pto_schema",
+        "column": "unique_id",
+        "references_column": "customer_unique_id"
+      },
+      "select_columns": [
+        { "column_name": "fire_permit_created_on", "alias": "created_date_fire_permit" },
+        { "column_name": "submitted", "alias": "submitted_date_fire_permit" },
+        { "column_name": "approved", "alias": "approved_date_fire_permit" }
+      ]
+    },
+    {
+      "app_id": "battery_permits_permit_fin_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "fire_permits_permit_fin_schema",
+        "column": "customer_unique_id",
+        "references_column": "customer_unique_id"
+      },
+      "select_columns": [
+        { "column_name": "battery_permit_created_on", "alias": "created_on_battery_permit" },
+        { "column_name": "submitted", "alias": "submitted_date_battery_permit" },
+        { "column_name": "approved", "alias": "approved_date_battery_permit" }
+      ]
+    },
+    {
+      "app_id": "electrical_permits_permit_fin_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "fire_permits_permit_fin_schema",
+        "column": "customer_unique_id",
+        "references_column": "customer_unique_id"
+      },
+      "select_columns": [
+        { "column_name": "created_on", "alias": "electrical_permit_created_on_elec_per" },
+        { "column_name": "submitted_date", "alias": "electrical_permit_submitted_date_elec_per" },
+        { "column_name": "approved", "alias": "electrical_permit_approved_date_elec_per" }
+      ]
+    },
+    {
+      "app_id": "pto_ic_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "ic_ic_pto_schema",
+        "column": "unique_id",
+        "references_column": "unique_id"
+      },
+      "select_columns": [
+        { "column_name": "pto_created_on", "alias": "created_on_pto" },
+        { "column_name": "submitted", "alias": "submitted_date_pto" },
+        { "column_name": "pto_specialist", "alias": "pto_specialist" },
+        { "column_name": "podio_redlined_date", "alias": "fail_date_pto" },
+        { "column_name": "pto_granted", "alias": "date_pto" }
+      ]
+    },
+    {
+      "app_id": "fin_permits_fin_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "pto_ic_schema",
+        "column": "unique_id",
+        "references_column": "unique_id"
+      },
+      "select_columns": [
+        { "column_name": "created_on", "alias": "created_date_fin_per" },
+        { "column_name": "fin_scheduled_on", "alias": "inspection_scheduled_date_fin_per" },
+        { "column_name": "approved_date", "alias": "approved_date_fin_per" },
+        { "column_name": "approved_date", "alias": "fin_pass_date_fin_per" },
+        { "column_name": "approved_date", "alias": "final_inspection_passed_date_fin_per" }
+      ]
+    },
+    {
+      "app_id": "trenching_service_electrical_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "fin_permits_fin_schema",
+        "column": "unique_id",
+        "references_column": "unique_id"
+      },
+      "select_columns": [
+        { "column_name": "completion_date", "alias": "completion_date_trench_ser" },
+        { "column_name": "trenching_created_on", "alias": "trenching_created_trench_ser" },
+        { "column_name": "work_scheduled_date", "alias": "scheduled_trench_ser" }
+      ]
+    },
+    {
+      "app_id": "roofing_request_install_subcontracting_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "trenching_service_electrical_schema",
+        "column": "unique_id",
+        "references_column": "unique_id"
+      },
+      "select_columns": [
+        { "column_name": "app_status", "alias": "app_status_roof_req" }
+      ]
+    },
+    {
+      "app_id": "mpu_service_electrical_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "roofing_request_install_subcontracting_schema",
+        "column": "unique_id",
+        "references_column": "unique_id"
+      },
+      "select_columns": [
+        { "column_name": "mpu_created_on", "alias": "created_date_mpu_ser" },
+        { "column_name": "pk_or_cutover_date", "alias": "scheduled_date_mpu_ser" },
+        { "column_name": "pk_or_cutover_date_of_completion", "alias": "complete_date_mpu_ser" }
+      ]
+    },
+    {
+      "app_id": "derates_service_electrical_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "mpu_service_electrical_schema",
+        "column": "unique_id",
+        "references_column": "unique_id"
+      },
+      "select_columns": [
+        { "column_name": "derate_created_on", "alias": "created_date_derate" },
+        { "column_name": "scheduled_date", "alias": "scheduled_date_derate" },
+        { "column_name": "completion_date", "alias": "completed_date_derate" }
+      ]
+    },
+    {
+      "app_id": "batteries_service_electrical_schema",
+      "join_type": "LEFT",
+      "join_conditions": {
+        "type": "simple",
+        "source_table_app_id": "derates_service_electrical_schema",
+        "column": "unique_id",
+        "references_column": "customer_unique_id"
+      },
+      "select_columns": [
+        { "column_name": "battery_installation_date", "alias": "scheduled_date_bat_ser" },
+        { "column_name": "completion_date", "alias": "complete_date_bat_ser" }
+      ]
+    }
+  ]
+}

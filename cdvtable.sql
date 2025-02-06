@@ -1,4 +1,3 @@
-
 CREATE TABLE CDV AS
 SELECT
 
@@ -19,7 +18,7 @@ SELECT
     c.phone_number AS customer_phone_number_cu,
     c.jeopardy_date AS jeopardy_date_cu,
     c.setter AS setter_cu,
-    c.adder_breakdown_total_new AS adder_breakdown_total_cu,
+    c.adder_breakdown_and_total_new AS adder_breakdown_total_cu,
     c.office AS office_cu,
     c.utility_company AS utility_company_cu,
     --c.created_on AS customer_created_on,
@@ -43,7 +42,7 @@ SELECT
 -- ntp_ntp_schema
     ntp.finance_type AS finance_type_ntp,
     ntp.net_epc AS net_epc_ntp,
-    ntp.prospect_id_dealer_id_and_sales_rep_id AS prospect_id_dealer_id_and_sales_rep_id_ntp,
+    ntp.prospectid_dealerid_salesrepid AS prospect_id_dealer_id_and_sales_rep_id_ntp,
     ntp.owe_funded_adder_breakdown_total AS owe_funded_adder_breakdown_total_ntp,
     ntp.ahj AS ahj_ntp,
     ntp.total_cost_for_adders AS total_cost_for_adders_ntp,
@@ -70,11 +69,11 @@ SELECT
     --pv.work_completed_date AS roofing_completed_date_pv_ins,
 
 -- permit_fin_pv_permits_schema
-    pf.pv_expected_approval_date AS pv_expected_approval_date_permit_fin,
+    pf.pv_expected_approval_date AS permit_submittal_eta_permit_fin,
     pf.pv_redlined_date AS pv_redlined_date_permit_fin,
-    pf.record_created_on AS record_created_on_permit_fin,
+    pf.Created_on AS created_on_permit_fin,
     pf.pv_submitted AS pv_submitted_permit_fin,
-    pf.pv_expected_approval_date AS pv_expected_approval_date_permit_fin,
+    pf.pv_expected_approval_date AS permit_expected_approval_date_permit_fin,
     pf.permit_specialist AS permit_specialist_permit_fin,
     pf.pv_resubmitted AS pv_resubmitted_permit_fin,
     pf.pv_approved AS pv_approved_permit_fin,
@@ -84,14 +83,14 @@ SELECT
 
 
 -- survey_survey_schema
-    sss.second_completion_date AS second_completion_date_survey,
+    sss.twond_completion_date AS second_completion_date_survey,
     sss.original_survey_scheduled_date AS original_survey_scheduled_date_survey,
     --sss. AS site_survey_rescheduled_date_survey,
     sss.survey_completion_date AS survey_completion_date_survey,
 
 --planset_cad_schema pcs
-    pcs.rejected_date AS cad_rejection_date_planset_cad,
-    pcs.rejected_date AS peee_rejection_date_planset_cad,
+    pcs.pe_ee_rejected_date AS cad_rejection_date_planset_cad,
+    pcs.pe_ee_rejected_date AS pe_ee_rejected_date_planset_cad,
     pcs.cad_designer_name AS cad_designer_planset_cad,
     pcs.cad_pending_date_h AS cad_ready_planset_cad,
     pcs.cad_complete_date AS cad_complete_date_planset_cad,
@@ -118,7 +117,7 @@ SELECT
 
 
 -- fire_permits_permit_fin_schema
-    fppfs.created_on AS created_date_fire_permit,
+    fppfs.fire_permit_created_on AS created_date_fire_permit,
     fppfs.submitted AS submitted_date_fire_permit,
     fppfs.approved AS approved_date_fire_permit,
 
@@ -132,12 +131,12 @@ SELECT
     bses.completion_date AS complete_date_bat_ser,
 
 -- electrical_permits_permit_fin_schema
-    eppfs.electrical_permit_created_on AS electrical_permit_created_on_elec_per,
+    eppfs.created_on AS electrical_permit_created_on_elec_per,
     eppfs.submitted_date AS electrical_permit_submitted_date_elec_per,
     eppfs.approved AS electrical_permit_approved_date_elec_per,
 
 -- ic_ic_pto_schema
-    iips.ic_created_on AS created_date_ic_ic,
+    iips.created_on AS created_date_ic_ic,
     iips.ic_submitted_date AS submitted_date_ic_ic,
     iips.ic_estimated_approval_date AS expected_approval_date_ic_ic,
     --iips.Utility_Specialist  AS utility_specialist_ic_ic,
@@ -152,8 +151,8 @@ SELECT
     pis.podio_redlined_date AS fail_date_pto,
     pis.pto_granted AS date_pto,
 
- --fin_permit_fin_schema fp;
-    fp.fin_created_on AS created_date_fin_per,
+--fin_permit_fin_schema fp;
+    fp.created_on AS created_date_fin_per,
     fp.fin_scheduled_on AS inspection_scheduled_date_fin_per,
     fp.approved_date AS approved_date_fin_per,
     fp.approved_date AS fin_pass_date_fin_per,
@@ -184,10 +183,10 @@ SELECT
 
 
 FROM customers_customers_schema c
-LEFT JOIN ntp_ntp_schema ntp ON c.unique_id = ntp.customer_unique_id
-LEFT JOIN sales_rep_dbhub_schema sr ON SPLIT_PART(ntp.prospect_id_dealer_id_and_sales_rep_id, ',', 3) = sr.record_id::text
-LEFT JOIN sales_partner_dbhub_schema spds ON SPLIT_PART(ntp.prospect_id_dealer_id_and_sales_rep_id, ',', 2) = spds.record_id::text
-LEFT JOIN prospects_customers_schema pc ON SPLIT_PART(ntp.prospect_id_dealer_id_and_sales_rep_id, ',', 1) = pc.item_id::text
+LEFT JOIN ntp_ntp_schema ntp ON c.unique_id = ntp.unique_id
+LEFT JOIN sales_rep_dbhub_schema sr ON SPLIT_PART(ntp.prospectid_dealerid_salesrepid, ',', 3) = sr.record_id::text
+LEFT JOIN sales_partner_dbhub_schema spds ON SPLIT_PART(ntp.prospectid_dealerid_salesrepid, ',', 2) = spds.record_id::text
+LEFT JOIN prospects_customers_schema pc ON SPLIT_PART(ntp.prospectid_dealerid_salesrepid, ',', 1) = pc.record_id::text
 LEFT JOIN sales_metrics_schema sms ON c.unique_id = sms.unique_id
 LEFT JOIN pv_install_install_subcontracting_schema pv ON sms.unique_id = pv.customer_unique_id
 LEFT JOIN permit_fin_pv_permits_schema pf ON pv.customer_unique_id = pf.customer_unique_id
@@ -195,16 +194,16 @@ LEFT JOIN survey_survey_schema sss ON c.unique_id = sss.customer_unique_id
 LEFT JOIN planset_cad_schema pcs ON sss.customer_unique_id = pcs.our_number
 LEFT JOIN pe_ee_stamps_cad_schema peee ON pcs.our_number = peee.customer_unique_id
 LEFT JOIN system_customers_schema scs ON peee.customer_unique_id = scs.customer_id
-LEFT JOIN ic_ic_pto_schema iips ON c.unique_id = iips.customer_unique_id
-LEFT JOIN fire_permits_permit_fin_schema fppfs ON iips.customer_unique_id = fppfs.customer_unique_id
+LEFT JOIN ic_ic_pto_schema iips ON c.unique_id = iips.unique_id
+LEFT JOIN fire_permits_permit_fin_schema fppfs ON iips.unique_id = fppfs.customer_unique_id
 LEFT JOIN battery_permits_permit_fin_schema bppfs ON fppfs.customer_unique_id = bppfs.customer_unique_id
 LEFT JOIN electrical_permits_permit_fin_schema eppfs ON fppfs.customer_unique_id = eppfs.customer_unique_id
-LEFT JOIN pto_ic_pto_schema pis ON iips.customer_unique_id = pis.customer_unique_id
-LEFT JOIN fin_permit_fin_schema fp ON pis.customer_unique_id = fp.customer_unique_id
-LEFT JOIN trenching_service_electrical_schema tses ON fp.customer_unique_id = tses.customer_unique_id
-LEFT JOIN roofing_request_install_subcontracting_schema rriss ON tses.customer_unique_id = rriss.customer_unique_id
-LEFT JOIN mpu_service_electrical_schema mses ON rriss.customer_unique_id = mses.customer_unique_id
-LEFT JOIN derates_service_electrical_schema dses ON mses.customer_unique_id = dses.customer_unique_id
-LEFT JOIN batteries_service_electrical_schema bses ON dses.customer_unique_id = bses.customer_unique_id
+LEFT JOIN pto_ic_schema pis ON iips.unique_id = pis.unique_id
+LEFT JOIN fin_permits_fin_schema fp ON pis.unique_id = fp.unique_id
+LEFT JOIN trenching_service_electrical_schema tses ON fp.unique_id = tses.unique_id
+LEFT JOIN roofing_request_install_subcontracting_schema rriss ON tses.unique_id = rriss.unique_id
+LEFT JOIN mpu_service_electrical_schema mses ON rriss.unique_id = mses.unique_id
+LEFT JOIN derates_service_electrical_schema dses ON mses.unique_id = dses.unique_id
+LEFT JOIN batteries_service_electrical_schema bses ON dses.unique_id = bses.customer_unique_id
 WHERE c.unique_id IS NOT NULL
 AND c.unique_id != '';
